@@ -7,7 +7,7 @@
 namespace BulkyWebRazor_Temp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCategoryTableToDb : Migration
+    public partial class AddCategoryToDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
