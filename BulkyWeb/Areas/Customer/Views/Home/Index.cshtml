@@ -13,10 +13,10 @@
                                 <p class="card-title text-warning text-center">by @product.Author</p>
                             </div>
                             <div class="pl-1">
-                                <p class="text-dark opacity-75 text-center mb-0">List Price:<span class="text-decoration-line-through">@product.ListPrice.ToString("c")</span></p>
+                                <p class="text-dark opacity-75 text-center mb-0">List Price:<span class="text-decoration-line-through">@product.ListPrice.ToString("c", new System.Globalization.CultureInfo("en-US"))</span></p>
                             </div>
                             <div class="pl-1">
-                                <p class="text-dark opacity-75 text-center">As Low as: <span>@product.Price100.ToString("c")</span></p>
+                                <p class="text-dark opacity-75 text-center">As Low as: <span>@product.Price100.ToString("c",new System.Globalization.CultureInfo("en-US"))</span></p>
                             </div>
                         </div>
                         <div>
