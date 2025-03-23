@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
+using static System.Net.WebRequestMethods;
 
 namespace BulkyBookWeb.Areas.Customer.Controllers
 {
@@ -14,11 +15,13 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
-        public CartController(IUnitOfWork unitOfWork)
+        public CartController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -64,6 +67,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
         [ActionName("Summary")]
         public IActionResult SummaryPOST()
         {
+            //var wwwRootPath=_webHostEnvironment.WebRootPath;
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(a => a.ApplicationUserId == userId, 
@@ -82,7 +86,6 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
                 //it is a regular customer account and we need to capture payment              
                 ShoppingCartVM.OrderHeader.PaymentStatus=SD.PaymentStatusPending;
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
-
             }
             else
             {
@@ -123,8 +126,8 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
                             Currency="usd",
                             ProductData=new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                             {
-                                //Images=item.Product.ImageUrl,
-                                Name=item.Product.Title
+                                //Images= new List<string> { "https://covers.openlibrary.org/b/id/7984916-L.jpg" },
+                                Name =item.Product.Title
                             }
                         },
                         Quantity=item.Count

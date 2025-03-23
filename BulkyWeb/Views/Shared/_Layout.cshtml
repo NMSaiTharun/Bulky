@@ -30,6 +30,9 @@
                             <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Orders</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if(User.IsInRole(SD.Role_Admin))
@@ -67,8 +70,8 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted bg-primary">
-        <div class="container text-center">
+    <footer class="border-top footer bg-primary text-muted">
+        <div class="text-center">
             BulkyBookWeb - Made with <i class="bi bi-heart-fill"></i> by Sai Tharun
         </div>
     </footer>
