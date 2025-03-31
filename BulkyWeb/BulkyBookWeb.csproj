@@ -24,7 +24,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="wwwroot\\images\\product\\*.*" CopyToPublishDirectory="PreserveNewest" />
+		<Folder Include="wwwroot\images\product\" />
 	</ItemGroup>
 
 
