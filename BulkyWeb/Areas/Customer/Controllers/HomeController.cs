@@ -23,6 +23,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
         public IActionResult Index()
         {           
             IEnumerable<Product> productList=_unitOfWork.Product.GetAll(includeProperties:"Category");
+            //<img src="~/images/book.png" style="width:30px"/>
             return View(productList);
         }
         public IActionResult Details(int id)
