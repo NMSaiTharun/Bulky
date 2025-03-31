@@ -120,7 +120,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             OrderVM.OrderHeader = _unitOfWork.OrderHeader.Get(a => a.Id == OrderVM.OrderHeader.Id, includeProperties: "ApplicationUser");
             OrderVM.OrderDetails = _unitOfWork.OrderDetail.GetAll(a => a.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
-            var domain = "https://localhost:7238/";
+            var domain = Request.Scheme + "://" + Request.Host.Value+"/";
             //need to do payment
             var options = new Stripe.Checkout.SessionCreateOptions
             {
