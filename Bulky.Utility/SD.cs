@@ -8,6 +8,7 @@ namespace BulkyBook.Utility
 {
     public static class SD
     {
+        //Role Management Variables
         public const string Role_Customer = "Customer";
         public const string Role_Company = "Company";
         public const string Role_Admin = "Admin";
@@ -26,5 +27,10 @@ namespace BulkyBook.Utility
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
         public const string PaymentStatusRejected = "Rejected";
+
+
+        //Session Management Variables
+        public const string SessionCart = "SessionShoppingCart";
+
     }
 }

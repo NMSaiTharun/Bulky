@@ -156,12 +156,13 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
                     _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
                     _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.Save();
-                }
+                }                
             }
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.
                 GetAll(a=>a.ApplicationUserId==orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
+            HttpContext.Session.Clear();
             return View(id);
         }
         public IActionResult Plus(int cartId)
@@ -174,10 +175,11 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
         }
         public IActionResult Minus(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.Get(a => a.Id == cartId);
+            var cartFromDb = _unitOfWork.ShoppingCart.Get(a => a.Id == cartId,tracked:true);
             cartFromDb.Count -= 1;
             if(cartFromDb.Count<=0)
             {
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(a => a.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
                 _unitOfWork.ShoppingCart.Remove(cartFromDb);
             }
             else
@@ -189,9 +191,10 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
         }
         public IActionResult Remove(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.Get(a => a.Id == cartId);
+            var cartFromDb = _unitOfWork.ShoppingCart.Get(a => a.Id == cartId,tracked:true);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(a => a.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
-            _unitOfWork.Save();
+            _unitOfWork.Save();           
             return RedirectToAction(nameof(Index));
         }
         private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
