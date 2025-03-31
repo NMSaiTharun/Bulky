@@ -23,11 +23,12 @@
     <ProjectReference Include="..\Bulky.DataAccess\BulkyBook.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\product\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="wwwroot\\images\\product\\*.*" CopyToPublishDirectory="PreserveNewest" />
+	</ItemGroup>
 
-  <ItemGroup>
+
+	<ItemGroup>
     <Content Update="Areas\Identity\Pages\Account\Manage\_ViewStart.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
