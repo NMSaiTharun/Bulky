@@ -59,7 +59,6 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
-
 void SeedDatabase()
 {
     using(var scope=app.Services.CreateScope())
