@@ -68,6 +68,11 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 if (file != null)
                 {
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    // In production, check if the path does NOT end with "wwwroot", then append it
+                    if (!wwwRootPath.EndsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
+                    {
+                        wwwRootPath = Path.Combine(wwwRootPath, "wwwroot");
+                    }
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
                     if (!string.IsNullOrEmpty(obj.Product.ImageUrl))
@@ -134,7 +139,13 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(productToBeDeleted.ImageUrl))
                 {
-                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    // In production, check if the path does NOT end with "wwwroot", then append it
+                    if (!wwwRootPath.EndsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
+                    {
+                        wwwRootPath = Path.Combine(wwwRootPath, "wwwroot");
+                    }
+                    var oldImagePath = Path.Combine(wwwRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
                     if (System.IO.File.Exists(oldImagePath))
                     {
                         System.IO.File.Delete(oldImagePath);

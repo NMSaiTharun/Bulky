@@ -1,8 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _webHostEnvironment
-<script type="text/javascript">
-    console.log("@_webHostEnvironment.WebRootPath");
-</script>
-@model IEnumerable<Product>
+﻿@model IEnumerable<Product>
 <div class="row pb-3 mb-4">
     @foreach (var product in Model)
     {
