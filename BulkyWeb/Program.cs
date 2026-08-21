@@ -35,6 +35,20 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IDBInitializer, DBInitializer>();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Product images live in Blob Storage when configured, so uploads survive a redeploy.
+// Without a connection string (local dev) they fall back to wwwroot.
+var storageConnection = builder.Configuration["Storage:ConnectionString"];
+if (!string.IsNullOrWhiteSpace(storageConnection))
+{
+    var containerName = builder.Configuration["Storage:ContainerName"] ?? "product-images";
+    builder.Services.AddSingleton<IFileStorage>(_ => new BlobFileStorage(storageConnection, containerName));
+}
+else
+{
+    builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
+}
+
 builder.Services.AddScoped<IEmailSender,EmailSender>();
 
 var app = builder.Build();

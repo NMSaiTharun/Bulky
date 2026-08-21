@@ -13,11 +13,11 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        private readonly IFileStorage _fileStorage;
+        public ProductController(IUnitOfWork unitOfWork, IFileStorage fileStorage)
         {
             _unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnvironment;
+            _fileStorage = fileStorage;
         }
 
         public IActionResult Index()
@@ -60,36 +60,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upsert(ProductVM obj, IFormFile? file)
+        public async Task<IActionResult> Upsert(ProductVM obj, IFormFile? file)
         {
 
             if (ModelState.IsValid)
             {
                 if (file != null)
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    // In production, check if the path does NOT end with "wwwroot", then append it
-                    if (!wwwRootPath.EndsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
-                    {
-                        wwwRootPath = Path.Combine(wwwRootPath, "wwwroot");
-                    }
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string productPath = Path.Combine(wwwRootPath, @"images\product");
-                    if (!string.IsNullOrEmpty(obj.Product.ImageUrl))
-                    {
-                        //delete the old image
-                        var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                    obj.Product.ImageUrl = @"\images\product\" + fileName;
-
+                    //delete the old image
+                    await _fileStorage.DeleteAsync(obj.Product.ImageUrl);
+                    obj.Product.ImageUrl = await _fileStorage.SaveAsync(file);
                 }
                 if (obj.Product.Id == 0)
                 {
@@ -128,7 +108,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var productToBeDeleted = _unitOfWork.Product.Get(a => a.Id == id);
             if (productToBeDeleted == null)
@@ -137,20 +117,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             }
             else
             {
-                if (!string.IsNullOrEmpty(productToBeDeleted.ImageUrl))
-                {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    // In production, check if the path does NOT end with "wwwroot", then append it
-                    if (!wwwRootPath.EndsWith("wwwroot", StringComparison.OrdinalIgnoreCase))
-                    {
-                        wwwRootPath = Path.Combine(wwwRootPath, "wwwroot");
-                    }
-                    var oldImagePath = Path.Combine(wwwRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
-                }
+                await _fileStorage.DeleteAsync(productToBeDeleted.ImageUrl);
                 _unitOfWork.Product.Remove(productToBeDeleted);
                 _unitOfWork.Save();
                 return Json(new { success = true, message = "Delete Successful" });
