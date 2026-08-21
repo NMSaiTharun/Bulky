@@ -91,14 +91,14 @@
 											<h6 class="my-0">@item.Product.Title</h6>
 											<small class="text-muted">Quantity: @item.Count</small>
 										</div>
-										<span class="text-muted">@((item.Price * item.Count).ToString("c", new System.Globalization.CultureInfo("en-US"))) </span>
+										<span class="text-muted">@((item.Price * item.Count).ToString("c", new System.Globalization.CultureInfo("en-IE"))) </span>
 									</li>
 								}					
 
 
 								<li class="list-group-item d-flex justify-content-between bg-light">
-									<small class="text-info">Total (USD)</small>
-									<strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c", new System.Globalization.CultureInfo("en-US"))</strong>
+									<small class="text-info">Total (EUR)</small>
+									<strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c", new System.Globalization.CultureInfo("en-IE"))</strong>
 								</li>
 							</ul>
 						</div>
