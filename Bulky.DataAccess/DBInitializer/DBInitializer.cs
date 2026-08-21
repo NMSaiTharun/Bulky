@@ -72,7 +72,7 @@ namespace BulkyBook.DataAccess.DBInitializer
                     PostalCode = "123456",
                     City = "NewYork"
                 }, adminPassword).GetAwaiter().GetResult();
-                ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(a => a.Email == "masteradmin1757@gmail.com");
+                ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(a => a.Email == "masteradmin1857@gmail.com");
                 _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
             }
             return;
